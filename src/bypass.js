@@ -1,9 +1,7 @@
-const chalk = require('chalk');
-const out = require('./console-out');
+import chalk from "chalk";
+import out from "./console-out.js";
 
-module.exports = {
-	combineBypassData
-};
+export { combineBypassData };
 
 /**
  * Combine different types of bypass data
@@ -21,7 +19,9 @@ function combineBypassData(generator, bypassArr, plopArgV) {
 	const promptNames = generator.prompts.map((prompt) => prompt.name);
 	// Check if bypassArr is too long for promptNames
 	if (bypassArr.length > promptNames.length) {
-		console.error(chalk.red('[PLOP] ') + 'Too many bypass arguments passed for "' + generator.name + '"');
+		console.error(
+			'Too many bypass arguments passed for "' + generator.name + '"'
+		);
 		out.getHelpMessage(generator);
 		process.exit(1);
 	}
@@ -31,8 +31,15 @@ function combineBypassData(generator, bypassArr, plopArgV) {
 		// Let's make sure we made no whoopsy-poos (AKA passing incorrect inputs)
 		let errors = false;
 		Object.keys(plopArgV).forEach((arg) => {
-			if (!(promptNames.find((name) => name === arg)) && arg !== '_') {
-				console.error(chalk.red('[PLOP] ') + '"' + arg + '"' + ' is an invalid argument for "' + generator.name + '"');
+			if (!promptNames.find((name) => name === arg) && arg !== "_") {
+				console.error(
+					'"' +
+						arg +
+						'"' +
+						' is an invalid argument for "' +
+						generator.name +
+						'"'
+				);
 				errors = true;
 			}
 		});
@@ -40,18 +47,20 @@ function combineBypassData(generator, bypassArr, plopArgV) {
 			out.getHelpMessage(generator);
 			process.exit(1);
 		}
-		namedBypassArr = promptNames.map((name) => plopArgV[name] ? plopArgV[name] : undefined);
+		namedBypassArr = promptNames.map((name) =>
+			plopArgV[name] ? plopArgV[name] : undefined
+		);
 	}
 
 	// merge the bypass data with named bypass values
 	const mergedBypass = mergeArrays(bypassArr, namedBypassArr);
 	// clean up `undefined` values
-	return mergedBypass.map(v => v === undefined ? '_' : v);
+	return mergedBypass.map((v) => (v === undefined ? "_" : v));
 }
 
 function mergeArrays(baseArr, overlay) {
 	const length = Math.max(baseArr.length, overlay.length);
-	return (new Array(length)).fill().map(
-		(v, i) => overlay[i] !== undefined ? overlay[i] : baseArr[i]
-	);
+	return new Array(length)
+		.fill()
+		.map((v, i) => (overlay[i] !== undefined ? overlay[i] : baseArr[i]));
 }

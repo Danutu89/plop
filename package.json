@@ -26,6 +26,7 @@
     "inquirer-directory": "^2.2.0",
     "plop-pack-fancy-comments": "^0.2.0"
   },
+  "type": "module",
   "homepage": "https://plopjs.com",
   "dependencies": {
     "@types/liftoff": "^2.5.0",
